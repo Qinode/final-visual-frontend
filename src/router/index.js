@@ -17,9 +17,10 @@ export default new Router({
             component: LeafMap
         },
         {
-            path: "/stats",
+            path: "/stats/:sensorID",
             name: "Stats",
-            component: Stats
+            component: Stats,
+            props: true
         }
     ],
 });
