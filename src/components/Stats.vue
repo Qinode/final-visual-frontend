@@ -1,14 +1,22 @@
 <template>
     <div>
-        <p>stats {{ this.sensorID }}</p>
-        <p v-for="measurement in measurements" :key="measurement">{{ measurement }}</p>
+        <p>stats {{ this.sensorId }}</p>
+        <div>
+            <LineChart v-for="measurement in measurements" :key="measurement"
+                       :sensor-id="sensorId"
+                       :measurement="measurement"></LineChart>
+        </div>
+        <!--<p v-for="measurement in measurements" :key="measurement">{{ measurement }}</p>-->
     </div>
 </template>
 
 <script>
+    import LineChart from "./LineChart";
+
     export default {
         name: "Stats",
-        props: ["sensorID"],
+        components: { LineChart },
+        props: ["sensorId"],
         computed: {
             measurements() {
                 // Todo: use data resources api instead of mock static data
