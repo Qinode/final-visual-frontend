@@ -47,7 +47,9 @@
                     accessToken: "pk.eyJ1Ijoiemhlbmc0NDQwIiwiYSI6ImNqZ3oxY2lkazJqYnMzM3A2eHd5bjI1cTYifQ.Mr2cbu_0rCaDQ7CUZL0YEg"
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
-                    L.marker(sensor).addTo(map);
+                    L.marker(sensor.latlng, { id: sensor.id }).addTo(map).on("click", (e) => {
+                        console.log(e.sourceTarget.options.id);
+                    });
                 });
                 return map;
             },
@@ -73,11 +75,11 @@
             },
             getSensors() {
                 return [
-                    [51.519502, -0.184536],
-                    [51.524629, -0.096474],
-                    [51.496317, -0.165482],
-                    [51.497172, -0.112438],
-                    [51.524949, -0.067978],
+                    { id: 1, latlng: [51.519502, -0.184536] },
+                    { id: 2, latlng: [51.524629, -0.096474] },
+                    { id: 3, latlng: [51.496317, -0.165482] },
+                    { id: 4, latlng: [51.497172, -0.112438] },
+                    { id: 5, latlng: [51.524949, -0.067978] }
                 ];
             },
             getSensorsData() {
