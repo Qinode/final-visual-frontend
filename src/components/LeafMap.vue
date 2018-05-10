@@ -48,7 +48,8 @@
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
                     L.marker(sensor.latlng, { id: sensor.id }).addTo(map).on("click", (e) => {
-                        console.log(e.sourceTarget.options.id);
+                        const url = this.$router.resolve({ name: "Stats" });
+                        window.open(url.href, "_blank");
                     });
                 });
                 return map;

@@ -1,6 +1,7 @@
-import Vue from 'vue';
-import Router from 'vue-router';
-import LeafMap from '@/components/LeafMap';
+import Vue from "vue";
+import Router from "vue-router";
+import LeafMap from "@/components/LeafMap";
+import Stats from "@/components/Stats";
 
 Vue.use(Router);
 
@@ -8,12 +9,17 @@ export default new Router({
     routes: [
         {
             path: "/",
-            redirect: "/map",
+            redirect: "/map"
         },
         {
-            path: '/map',
-            name: 'LeafMap',
-            component: LeafMap,
+            path: "/map",
+            name: "LeafMap",
+            component: LeafMap
         },
+        {
+            path: "/stats",
+            name: "Stats",
+            component: Stats
+        }
     ],
 });
