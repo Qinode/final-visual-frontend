@@ -4,7 +4,7 @@
         <div class="timeline">
             <ol>
                 <li v-for="n in this.snapshot"
-                    @click = "setSnapshot(n.timestamp)">
+                    @click="setSnapshot(n.timestamp)">
 
                 </li>
             </ol>
@@ -15,6 +15,7 @@
 
 <script>
     import L from "leaflet";
+    import "@/assets/lib/leaflet/leaflet-idw";
     import heatmap from "heatmap.js";
     import HeatmapOverlay from "@/assets/lib/leaflet/leaf-heat";
 
@@ -44,8 +45,8 @@
                 const map = L.map("map", {
                     center: [51.504331316, -0.123166],
                     zoom: 13,
-                    // minZoom: 13,
-                    // maxZoom: 13,
+                    minZoom: 13,
+                    maxZoom: 13,
                     zoomControl: false,
                     dragging: false
                 });
@@ -57,30 +58,24 @@
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
                     L.marker(sensor.latlng, { id: sensor.id }).addTo(map).on("click", (e) => {
-                        const url = this.$router.resolve({ name: "Stats", params: { sensorId: e.sourceTarget.options.id } });
+                        const url = this.$router.resolve({
+                            name: "Stats",
+                            params: { sensorId: e.sourceTarget.options.id }
+                        });
                         window.open(url.href, "_blank");
                     });
                 });
                 return map;
             },
             heatMapLayer() {
-                return new HeatmapOverlay({
-                    radius: 10,
-                    opacity: 0.4,
-                    blur: 0.5,
-                    scaleRadius: false,
-                    useLocalExtrema: true,
-                    gradient: {
-                        // enter n keys between 0 and 1 here
-                        // for gradient color customization
-                        ".5": "blue",
-                        ".8": "red",
-                        ".95": "white"
-                    },
-                    latField: "lat",
-                    lngField: "lng",
-                    valueField: "value"
-                });
+                return L.idwLayer([
+                        [51.519502, -0.184536, 1],
+                        [51.524629, -0.096474, 3],
+                        [51.496317, -0.165482, 8],
+                        [51.497172, -0.112438, 7],
+                        [51.524949, -0.067978, 6]
+                    ],
+                    { opacity: 0.3, cellSize: 10, maxZoom: 18, exp: 1, max: 10 });
             }
         },
         methods: {
@@ -93,32 +88,29 @@
             },
             getSensors() {
                 return [
-                    { id: 1, latlng: [51.519502, -0.184536] },
-                    { id: 2, latlng: [51.524629, -0.096474] },
-                    { id: 3, latlng: [51.496317, -0.165482] },
-                    { id: 4, latlng: [51.497172, -0.112438] },
-                    { id: 5, latlng: [51.524949, -0.067978] }
+                    {id: 1, latlng: [51.519502, -0.184536]},
+                    {id: 2, latlng: [51.524629, -0.096474]},
+                    {id: 3, latlng: [51.496317, -0.165482]},
+                    {id: 4, latlng: [51.497172, -0.112438]},
+                    {id: 5, latlng: [51.524949, -0.067978]}
                 ];
             },
             getSensorsData() {
                 return [
-                    { lat: 51.519502, lng: -0.184536, value: Math.floor((Math.random() * 10) + 1) },
-                    { lat: 51.524629, lng: -0.096474, value: Math.floor((Math.random() * 10) + 1) },
-                    { lat: 51.496317, lng: -0.165482, value: Math.floor((Math.random() * 10) + 1) },
-                    { lat: 51.497172, lng: -0.112438, value: Math.floor((Math.random() * 10) + 1) },
-                    { lat: 51.524949, lng: -0.067978, value: Math.floor((Math.random() * 10) + 1) }
+                   [51.519502, -0.184536, Math.floor(Math.random() * 10) + 1],
+                   [51.524629, -0.096474, Math.floor(Math.random() * 10) + 1],
+                   [51.496317, -0.165482, Math.floor(Math.random() * 10) + 1],
+                   [51.497172, -0.112438, Math.floor(Math.random() * 10) + 1],
+                   [51.524949, -0.067978, Math.floor(Math.random() * 10) + 1]
                 ];
             },
             renderHeatLayer() {
                 const sensorValues = this.getSensorsData();
-                this.snapshot.push({ timestamp: this.sensorData, value: sensorValues });
+                this.snapshot.push({timestamp: this.sensorData, value: sensorValues});
                 if (this.snapshot.length > 10) {
                     this.snapshot.shift();
                 }
-                this.heatmap.setData({
-                    max: 10,
-                    data: sensorValues
-                });
+                this.heatmap.setLatLngs(sensorValues);
                 setTimeout(this.renderHeatLayer, 5000);
             },
             setSnapshot(timestamp) {
@@ -140,6 +132,7 @@
     #map {
         height: 600px;
     }
+
     .timeline {
         overflow-x: hidden;
         padding: 20px 0;
@@ -148,30 +141,31 @@
     .timeline ol {
         width: 100%;
         transition: all 1s;
-        margin:0;
-        padding:0;
-        display:flex;
+        margin: 0;
+        padding: 0;
+        display: flex;
         justify-content: space-between;
     }
 
     .timeline ol li {
-        list-style:none;
+        list-style: none;
         position: relative;
-        text-align:center;
+        text-align: center;
         flex-grow: 1;
         flex-basis: 0;
         padding: 0 5px;
     }
 
     .timeline ol li:before {
-        content:"";
-        width:10px;
-        height:10px;
-        display:block;
-        border-radius:50%;
+        content: "";
+        width: 10px;
+        height: 10px;
+        display: block;
+        border-radius: 50%;
         background: #ccc;
-        margin:0 auto 5px auto;
+        margin: 0 auto 5px auto;
     }
+
     .timeline ol li:not(:last-child)::after {
         content: "";
         width: calc(100% - 14px);
