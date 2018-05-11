@@ -1,6 +1,6 @@
 <template>
     <div>
-        <p>stats {{ this.sensorId }}</p>
+        <p>sensor{{ this.sensorId }}</p>
         <div>
             <LineChart v-for="measurement in measurements" :key="measurement"
                        :sensor-id="sensorId"

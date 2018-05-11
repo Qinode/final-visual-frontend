@@ -1,6 +1,14 @@
 <template>
     <div>
         <h3>{{ sensorData }}</h3>
+        <div class="timeline">
+            <ol>
+                <li v-for="n in this.snapshot"
+                    @click = "setSnapshot(n.timestamp)">
+
+                </li>
+            </ol>
+        </div>
         <div id="map"></div>
     </div>
 </template>
@@ -17,6 +25,7 @@
                 leafMap: undefined,
                 sensors: [],
                 heatmap: undefined,
+                snapshot: [],
                 sensorData: "Welcome to Your Vue.js App"
             };
         },
@@ -56,10 +65,18 @@
             },
             heatMapLayer() {
                 return new HeatmapOverlay({
-                    "radius": 0.005,
-                    "maxOpacity": 8,
-                    "scaleRadius": true,
-                    "useLocalExtrema": true,
+                    radius: 10,
+                    opacity: 0.4,
+                    blur: 0.5,
+                    scaleRadius: false,
+                    useLocalExtrema: true,
+                    gradient: {
+                        // enter n keys between 0 and 1 here
+                        // for gradient color customization
+                        ".5": "blue",
+                        ".8": "red",
+                        ".95": "white"
+                    },
                     latField: "lat",
                     lngField: "lng",
                     valueField: "value"
@@ -93,11 +110,22 @@
                 ];
             },
             renderHeatLayer() {
+                const sensorValues = this.getSensorsData();
+                this.snapshot.push({ timestamp: this.sensorData, value: sensorValues });
+                if (this.snapshot.length > 10) {
+                    this.snapshot.shift();
+                }
                 this.heatmap.setData({
                     max: 10,
-                    data: this.getSensorsData()
+                    data: sensorValues
                 });
-                setTimeout(this.renderHeatLayer, 1000);
+                setTimeout(this.renderHeatLayer, 5000);
+            },
+            setSnapshot(timestamp) {
+                this.heatmap.setData({
+                    max: 10,
+                    data: this.snapshot.find(item => item.timestamp === timestamp).value
+                });
             }
         }
     };
@@ -111,5 +139,48 @@
 
     #map {
         height: 600px;
+    }
+    .timeline {
+        overflow-x: hidden;
+        padding: 20px 0;
+    }
+
+    .timeline ol {
+        width: 100%;
+        transition: all 1s;
+        margin:0;
+        padding:0;
+        display:flex;
+        justify-content: space-between;
+    }
+
+    .timeline ol li {
+        list-style:none;
+        position: relative;
+        text-align:center;
+        flex-grow: 1;
+        flex-basis: 0;
+        padding: 0 5px;
+    }
+
+    .timeline ol li:before {
+        content:"";
+        width:10px;
+        height:10px;
+        display:block;
+        border-radius:50%;
+        background: #ccc;
+        margin:0 auto 5px auto;
+    }
+    .timeline ol li:not(:last-child)::after {
+        content: "";
+        width: calc(100% - 14px);
+        height: 2px;
+        display: block;
+        background: #ccc;
+        margin: 0;
+        position: absolute;
+        top: 4px;
+        left: calc(50% + 7px);
     }
 </style>
