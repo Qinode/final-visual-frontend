@@ -43,10 +43,10 @@
         computed: {
             basicMapLayer() {
                 const map = L.map("map", {
-                    center: [51.504331316, -0.123166],
-                    zoom: 13,
-                    minZoom: 13,
-                    maxZoom: 13,
+                    center: [50.94171482, -0.10913786],
+                    zoom: 18,
+                    minZoom: 18,
+                    maxZoom: 18,
                     zoomControl: false,
                     dragging: false
                 });
@@ -57,10 +57,10 @@
                     accessToken: "pk.eyJ1Ijoiemhlbmc0NDQwIiwiYSI6ImNqZ3oxY2lkazJqYnMzM3A2eHd5bjI1cTYifQ.Mr2cbu_0rCaDQ7CUZL0YEg"
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
-                    L.marker(sensor.latlng, { id: sensor.id }).addTo(map).on("click", (e) => {
+                    L.marker(sensor.latlng, {id: sensor.id}).addTo(map).on("click", (e) => {
                         const url = this.$router.resolve({
                             name: "Stats",
-                            params: { sensorId: e.sourceTarget.options.id }
+                            params: {sensorId: e.sourceTarget.options.id}
                         });
                         window.open(url.href, "_blank");
                     });
@@ -69,13 +69,8 @@
             },
             heatMapLayer() {
                 return L.idwLayer([
-                        [51.519502, -0.184536, 1],
-                        [51.524629, -0.096474, 3],
-                        [51.496317, -0.165482, 8],
-                        [51.497172, -0.112438, 7],
-                        [51.524949, -0.067978, 6]
                     ],
-                    { opacity: 0.3, cellSize: 10, maxZoom: 18, exp: 1, max: 10 });
+                    { opacity: 0.1, cellSize: 10, maxZoom: 18, exp: 2, max: 10 });
             }
         },
         methods: {
@@ -88,25 +83,67 @@
             },
             getSensors() {
                 return [
-                    {id: 1, latlng: [51.519502, -0.184536]},
-                    {id: 2, latlng: [51.524629, -0.096474]},
-                    {id: 3, latlng: [51.496317, -0.165482]},
-                    {id: 4, latlng: [51.497172, -0.112438]},
-                    {id: 5, latlng: [51.524949, -0.067978]}
+                    { id: 1, latlng: [50.94099679, -0.10949393] },
+                    { id: 2, latlng: [50.94131024, -0.10934176] },
+                    { id: 3, latlng: [50.94171482, -0.10913786] },
+                    { id: 4, latlng: [50.94219203, -0.10916078] },
+                    { id: 5, latlng: [50.94236324, -0.10900667] },
+                    { id: 6, latlng: [50.9410758, -0.11020363] },
+                    { id: 7, latlng: [50.9413209, -0.11009397] },
+                    { id: 8, latlng: [50.94182848, -0.10997704] },
+                    { id: 9, latlng: [50.94208887, -0.10993387] },
+                    { id: 10, latlng: [50.94250863, -0.10991221] },
+                    { id: 11, latlng: [50.9424186, -0.10866688] },
+                    { id: 12, latlng: [50.94199277, -0.10867638] },
+                    { id: 13, latlng: [50.94164463, -0.10886622] },
+                    { id: 14, latlng: [50.94126736, -0.10890052] },
+                    { id: 15, latlng: [50.94096022, -0.10925082] },
+                    { id: 16, latlng: [50.94089209, -0.10990126] },
+                    { id: 17, latlng: [50.94133561, -0.10969257] },
+                    { id: 18, latlng: [50.94209916, -0.10953461] },
+                    { id: 19, latlng: [50.94172002, -0.10957757] },
+                    { id: 20, latlng: [50.94244257, -0.10942202] },
+                    { id: 21, latlng: [50.94104064, -0.11057843] },
+                    { id: 22, latlng: [50.94148519, -0.11033065] },
+                    { id: 23, latlng: [50.94177094, -0.11037551] },
+                    { id: 24, latlng: [50.94216666, -0.11023289] },
+                    { id: 25, latlng: [50.94232998, -0.1103066] },
+                    { id: 26, latlng: [50.942387, -0.10990188] }
                 ];
             },
             getSensorsData() {
                 return [
-                   [51.519502, -0.184536, Math.floor(Math.random() * 10) + 1],
-                   [51.524629, -0.096474, Math.floor(Math.random() * 10) + 1],
-                   [51.496317, -0.165482, Math.floor(Math.random() * 10) + 1],
-                   [51.497172, -0.112438, Math.floor(Math.random() * 10) + 1],
-                   [51.524949, -0.067978, Math.floor(Math.random() * 10) + 1]
+                    [50.94099679, -0.10949393, Math.floor(Math.random() * 10) + 1],
+                    [50.94131024, -0.10934176, Math.floor(Math.random() * 10) + 1],
+                    [50.94171482, -0.10913786, Math.floor(Math.random() * 10) + 1],
+                    [50.94219203, -0.10916078, Math.floor(Math.random() * 10) + 1],
+                    [50.94236324, -0.10900667, Math.floor(Math.random() * 10) + 1],
+                    [50.9410758, -0.11020363, Math.floor(Math.random() * 10) + 1],
+                    [50.9413209, -0.11009397, Math.floor(Math.random() * 10) + 1],
+                    [50.94182848, -0.10997704, Math.floor(Math.random() * 10) + 1],
+                    [50.94208887, -0.10993387, Math.floor(Math.random() * 10) + 1],
+                    [50.94250863, -0.10991221, Math.floor(Math.random() * 10) + 1],
+                    [50.9424186, -0.10866688, Math.floor(Math.random() * 10) + 1],
+                    [50.94199277, -0.10867638, Math.floor(Math.random() * 10) + 1],
+                    [50.94164463, -0.10886622, Math.floor(Math.random() * 10) + 1],
+                    [50.94126736, -0.10890052, Math.floor(Math.random() * 10) + 1],
+                    [50.94096022, -0.10925082, Math.floor(Math.random() * 10) + 1],
+                    [50.94089209, -0.10990126, Math.floor(Math.random() * 10) + 1],
+                    [50.94133561, -0.10969257, Math.floor(Math.random() * 10) + 1],
+                    [50.94209916, -0.10953461, Math.floor(Math.random() * 10) + 1],
+                    [50.94172002, -0.10957757, Math.floor(Math.random() * 10) + 1],
+                    [50.94244257, -0.10942202, Math.floor(Math.random() * 10) + 1],
+                    [50.94104064, -0.11057843, Math.floor(Math.random() * 10) + 1],
+                    [50.94148519, -0.11033065, Math.floor(Math.random() * 10) + 1],
+                    [50.94177094, -0.11037551, Math.floor(Math.random() * 10) + 1],
+                    [50.94216666, -0.11023289, Math.floor(Math.random() * 10) + 1],
+                    [50.94232998, -0.1103066, Math.floor(Math.random() * 10) + 1],
+                    [50.942387, -0.10990188, Math.floor(Math.random() * 10) + 1]
                 ];
             },
             renderHeatLayer() {
                 const sensorValues = this.getSensorsData();
-                this.snapshot.push({timestamp: this.sensorData, value: sensorValues});
+                this.snapshot.push({ timestamp: this.sensorData, value: sensorValues });
                 if (this.snapshot.length > 10) {
                     this.snapshot.shift();
                 }
@@ -114,6 +151,7 @@
                 setTimeout(this.renderHeatLayer, 5000);
             },
             setSnapshot(timestamp) {
+                // todo: change setData into api in idw.layer
                 this.heatmap.setData({
                     max: 10,
                     data: this.snapshot.find(item => item.timestamp === timestamp).value

@@ -306,7 +306,6 @@
             }
 
             console.timeEnd('process');
-
             console.time('draw ' + data.length);
             this._idw.data(data).draw(this.options.opacity);
             console.timeEnd('draw ' + data.length);
