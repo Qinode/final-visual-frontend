@@ -137,7 +137,7 @@
             },
             renderHeatLayer() {
                 const sensorValues = this.getSensorsData();
-                this.snapshot.push({timestamp: this.sensorData, value: sensorValues});
+                this.snapshot.push({ timestamp: this.sensorData, value: sensorValues });
                 if (this.snapshot.length > 10) {
                     this.snapshot.shift();
                 }
@@ -145,11 +145,9 @@
                 setTimeout(this.renderHeatLayer, 5000);
             },
             setSnapshot(timestamp) {
-                // todo: change setData into api in idw.layer
-                this.heatmap.setData({
-                    max: 10,
-                    data: this.snapshot.find(item => item.timestamp === timestamp).value
-                });
+                this.heatmap.setLatLngs(
+                    this.snapshot.find(item => item.timestamp === timestamp).value
+                );
             }
         }
     };
