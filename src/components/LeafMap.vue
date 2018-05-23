@@ -16,8 +16,6 @@
 <script>
     import L from "leaflet";
     import "@/assets/lib/leaflet/leaflet-idw";
-    import heatmap from "heatmap.js";
-    import HeatmapOverlay from "@/assets/lib/leaflet/leaf-heat";
 
     export default {
         name: "LeafMap",
@@ -140,7 +138,7 @@
             },
             renderHeatLayer() {
                 const sensorValues = this.getSensorsData();
-                this.snapshot.push({ timestamp: this.sensorData, value: sensorValues });
+                this.snapshot.push({timestamp: this.sensorData, value: sensorValues});
                 if (this.snapshot.length > 10) {
                     this.snapshot.shift();
                 }
