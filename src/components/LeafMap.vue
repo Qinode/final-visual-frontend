@@ -50,11 +50,8 @@
                     zoomControl: false,
                     dragging: false
                 });
-                L.tileLayer("https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1Ijoiemhlbmc0NDQwIiwiYSI6ImNqZ3oxY2lkazJqYnMzM3A2eHd5bjI1cTYifQ.Mr2cbu_0rCaDQ7CUZL0YEg", {
-                    attribution: "Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>, Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>",
-                    maxZoom: 18,
-                    id: "mapbox.streets",
-                    accessToken: "pk.eyJ1Ijoiemhlbmc0NDQwIiwiYSI6ImNqZ3oxY2lkazJqYnMzM3A2eHd5bjI1cTYifQ.Mr2cbu_0rCaDQ7CUZL0YEg"
+                L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+                    attribution: "Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community"
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
                     L.marker(sensor.latlng, {id: sensor.id}).addTo(map).on("click", (e) => {
@@ -70,7 +67,7 @@
             heatMapLayer() {
                 return L.idwLayer([
                     ],
-                    { opacity: 0.1, cellSize: 10, maxZoom: 18, exp: 2, max: 10 });
+                    { opacity: 0.2, cellSize: 5, maxZoom: 18, exp: 2, max: 30 });
             }
         },
         methods: {
@@ -113,30 +110,30 @@
             },
             getSensorsData() {
                 return [
-                    [50.94099679, -0.10949393, Math.floor(Math.random() * 10) + 1],
-                    [50.94131024, -0.10934176, Math.floor(Math.random() * 10) + 1],
-                    [50.94171482, -0.10913786, Math.floor(Math.random() * 10) + 1],
-                    [50.94219203, -0.10916078, Math.floor(Math.random() * 10) + 1],
-                    [50.94236324, -0.10900667, Math.floor(Math.random() * 10) + 1],
+                    [50.94099679, -0.10949393, Math.floor(Math.random() * 30) + 1],
+                    [50.94131024, -0.10934176, Math.floor(Math.random() * 30) + 1],
+                    [50.94171482, -0.10913786, Math.floor(Math.random() * 30) + 1],
+                    [50.94219203, -0.10916078, Math.floor(Math.random() * 30) + 1],
+                    [50.94236324, -0.10900667, Math.floor(Math.random() * 30) + 1],
                     [50.9410758, -0.11020363, Math.floor(Math.random() * 10) + 1],
                     [50.9413209, -0.11009397, Math.floor(Math.random() * 10) + 1],
                     [50.94182848, -0.10997704, Math.floor(Math.random() * 10) + 1],
                     [50.94208887, -0.10993387, Math.floor(Math.random() * 10) + 1],
                     [50.94250863, -0.10991221, Math.floor(Math.random() * 10) + 1],
                     [50.9424186, -0.10866688, Math.floor(Math.random() * 10) + 1],
-                    [50.94199277, -0.10867638, Math.floor(Math.random() * 10) + 1],
-                    [50.94164463, -0.10886622, Math.floor(Math.random() * 10) + 1],
-                    [50.94126736, -0.10890052, Math.floor(Math.random() * 10) + 1],
-                    [50.94096022, -0.10925082, Math.floor(Math.random() * 10) + 1],
-                    [50.94089209, -0.10990126, Math.floor(Math.random() * 10) + 1],
+                    [50.94199277, -0.10867638, Math.floor(Math.random() * 20) + 1],
+                    [50.94164463, -0.10886622, Math.floor(Math.random() * 20) + 1],
+                    [50.94126736, -0.10890052, Math.floor(Math.random() * 20) + 1],
+                    [50.94096022, -0.10925082, Math.floor(Math.random() * 20) + 1],
+                    [50.94089209, -0.10990126, Math.floor(Math.random() * 20) + 1],
                     [50.94133561, -0.10969257, Math.floor(Math.random() * 10) + 1],
                     [50.94209916, -0.10953461, Math.floor(Math.random() * 10) + 1],
-                    [50.94172002, -0.10957757, Math.floor(Math.random() * 10) + 1],
-                    [50.94244257, -0.10942202, Math.floor(Math.random() * 10) + 1],
-                    [50.94104064, -0.11057843, Math.floor(Math.random() * 10) + 1],
-                    [50.94148519, -0.11033065, Math.floor(Math.random() * 10) + 1],
-                    [50.94177094, -0.11037551, Math.floor(Math.random() * 10) + 1],
-                    [50.94216666, -0.11023289, Math.floor(Math.random() * 10) + 1],
+                    [50.94172002, -0.10957757, Math.floor(Math.random() * 30) + 1],
+                    [50.94244257, -0.10942202, Math.floor(Math.random() * 30) + 1],
+                    [50.94104064, -0.11057843, Math.floor(Math.random() * 30) + 1],
+                    [50.94148519, -0.11033065, Math.floor(Math.random() * 30) + 1],
+                    [50.94177094, -0.11037551, Math.floor(Math.random() * 30) + 1],
+                    [50.94216666, -0.11023289, Math.floor(Math.random() * 30) + 1],
                     [50.94232998, -0.1103066, Math.floor(Math.random() * 10) + 1],
                     [50.942387, -0.10990188, Math.floor(Math.random() * 10) + 1]
                 ];
