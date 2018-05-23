@@ -5,7 +5,6 @@
             <ol>
                 <li v-for="n in this.snapshot"
                     @click="setSnapshot(n.timestamp)">
-
                 </li>
             </ol>
         </div>

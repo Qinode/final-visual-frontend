@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
-import LeafMap from "@/components/LeafMap";
-import Stats from "@/components/Stats";
+import LeafMap from "@/components/visual/LeafMap";
+import Stats from "@/components/visual/stats/Stats";
 
 Vue.use(Router);
 
