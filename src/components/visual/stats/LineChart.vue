@@ -11,6 +11,7 @@
 
 <script>
     import Chart from "chart.js";
+    import moment from "moment";
 
     export default {
         name: "LineChart",
@@ -56,7 +57,10 @@
         },
         methods: {
             getData() {
-                return { x: Date.now(), y: Math.floor((Math.random() * 10) + 1) };
+                return {
+                    x: moment.utc(),
+                    y: Math.floor((Math.random() * 10) + 1)
+                };
             },
             updateChart() {
                 this.lineChart.config.data.datasets[0].data.push(this.getData());

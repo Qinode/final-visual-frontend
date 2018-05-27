@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h3>{{ sensorData }}</h3>
+        <h3>{{ now }}</h3>
         <div class="timeline">
             <ol>
                 <li v-for="n in this.snapshot"
@@ -15,6 +15,7 @@
 <script>
     import L from "leaflet";
     import "@/assets/lib/leaflet/leaflet-idw";
+    import moment from "moment";
 
     export default {
         name: "LeafMap",
@@ -24,11 +25,11 @@
                 sensors: [],
                 heatmap: undefined,
                 snapshot: [],
-                sensorData: "Welcome to Your Vue.js App"
+                now: "Welcome to Your Vue.js App"
             };
         },
         created() {
-            this.updateData();
+            this.updateNow();
             this.sensors = this.getSensors();
         },
         mounted() {
@@ -68,12 +69,9 @@
             }
         },
         methods: {
-            getData() {
-                return Date.now() / 1000;
-            },
-            updateData() {
-                this.sensorData = this.getData();
-                setTimeout(this.updateData, 1000);
+            updateNow() {
+                this.now = moment.utc().format(this.$datetimeFormat);
+                setTimeout(this.updateNow, 1000);
             },
             getSensors() {
                 return [
@@ -137,7 +135,7 @@
             },
             renderHeatLayer() {
                 const sensorValues = this.getSensorsData();
-                this.snapshot.push({ timestamp: this.sensorData, value: sensorValues });
+                this.snapshot.push({ timestamp: this.now, value: sensorValues });
                 if (this.snapshot.length > 10) {
                     this.snapshot.shift();
                 }

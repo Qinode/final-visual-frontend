@@ -22,5 +22,5 @@ export default new Router({
             component: Stats,
             props: true
         }
-    ],
+    ]
 });
