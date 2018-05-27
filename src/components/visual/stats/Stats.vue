@@ -20,7 +20,7 @@
         computed: {
             measurements() {
                 // Todo: use data resources api instead of mock static data
-                return ["m1", "m2"];
+                return ["field1"];
             }
         }
     };

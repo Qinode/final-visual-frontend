@@ -19,6 +19,8 @@
         data() {
             return {
                 lineChart: undefined,
+                maxLength: 12 * 60,
+                lastUpdate: moment.utc().format(this.$datetimeFormat),
                 data: []
             };
         },
@@ -53,22 +55,43 @@
                 }
             };
             this.lineChart = new Chart(ctx, cfg);
-            this.updateChart();
+            this.updateChart([]);
         },
         methods: {
             getData() {
-                return {
-                    x: moment.utc(),
-                    y: Math.floor((Math.random() * 10) + 1)
+                const body = {
+                    sensor_id: this.sensorId,
+                    field: this.measurement,
+                    timestamp: this.lastUpdate
                 };
+                if (this.sensorId === "fd002124b00a4a5a") {
+                    this.$http.post("data", body).then(
+                        (response) => {
+                            if (response.data.data.length !== 0) {
+                                this.lastUpdate = moment.utc().format(this.$datetimeFormat);
+                                let newData = [];
+                                response.data.data.forEach((point) => {
+                                    newData.push({
+                                        x: point.time,
+                                        y: point[this.measurement]
+                                    });
+                                });
+                                this.updateChart(newData);
+                            }
+                        },
+                        (response) => {
+                            console.log(response.data);
+                        }
+                    );
+                }
             },
-            updateChart() {
-                this.lineChart.config.data.datasets[0].data.push(this.getData());
-                if (this.lineChart.config.data.datasets[0].data.length > 10) {
+            updateChart(newData) {
+                this.lineChart.config.data.datasets[0].data.push(...newData);
+                while (this.lineChart.config.data.datasets[0].data.length > this.maxLength) {
                     this.lineChart.config.data.datasets[0].data.shift();
                 }
                 this.lineChart.update();
-                setTimeout(this.updateChart, 1000);
+                setTimeout(this.getData, 10000);
             }
         }
     };
