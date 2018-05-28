@@ -64,26 +64,24 @@
                     field: this.measurement,
                     timestamp: this.lastUpdate
                 };
-                if (this.sensorId === "fd002124b00a4a5a") {
-                    this.$http.post("data", body).then(
-                        (response) => {
-                            if (response.data.data.length !== 0) {
-                                this.lastUpdate = moment.utc().format(this.$datetimeFormat);
-                                let newData = [];
-                                response.data.data.forEach((point) => {
-                                    newData.push({
-                                        x: point.time,
-                                        y: point[this.measurement]
-                                    });
+                this.$http.post("data", body).then(
+                    (response) => {
+                        if (response.data.data.length !== 0) {
+                            this.lastUpdate = moment.utc().format(this.$datetimeFormat);
+                            let newData = [];
+                            response.data.data.forEach((point) => {
+                                newData.push({
+                                    x: point.time,
+                                    y: point[this.measurement]
                                 });
-                                this.updateChart(newData);
-                            }
-                        },
-                        (response) => {
-                            console.log(response.data);
+                            });
+                            this.updateChart(newData);
                         }
-                    );
-                }
+                    },
+                    (response) => {
+                        console.log(response.data);
+                    }
+                );
             },
             updateChart(newData) {
                 this.lineChart.config.data.datasets[0].data.push(...newData);
@@ -91,7 +89,7 @@
                     this.lineChart.config.data.datasets[0].data.shift();
                 }
                 this.lineChart.update();
-                setTimeout(this.getData, 10000);
+                setTimeout(this.getData, 60 * 1000);
             }
         }
     };

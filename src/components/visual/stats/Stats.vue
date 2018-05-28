@@ -16,13 +16,23 @@
     export default {
         name: "Stats",
         components: { LineChart },
+        data() {
+            return {
+                measurements: []
+            };
+        },
         props: ["sensorId"],
-        computed: {
-            measurements() {
-                // Todo: use data resources api instead of mock static data
-                return ["field1"];
-            }
+        created() {
+            this.$http.post("metadata/fields", { sensor_id: this.sensorId }).then(
+                (response) => {
+                    this.measurements = response.data.data;
+                },
+                (response) => {
+                    console.log(response.data);
+                }
+            );
         }
+
     };
 </script>
 
