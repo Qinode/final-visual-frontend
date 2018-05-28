@@ -55,7 +55,7 @@
                 }
             };
             this.lineChart = new Chart(ctx, cfg);
-            this.updateChart([]);
+            this.getData();
         },
         methods: {
             getData() {
@@ -82,6 +82,7 @@
                         console.log(response.data);
                     }
                 );
+                setTimeout(this.getData, 2 * 1000);
             },
             updateChart(newData) {
                 this.lineChart.config.data.datasets[0].data.push(...newData);
@@ -89,7 +90,6 @@
                     this.lineChart.config.data.datasets[0].data.shift();
                 }
                 this.lineChart.update();
-                setTimeout(this.getData, 60 * 1000);
             }
         }
     };
