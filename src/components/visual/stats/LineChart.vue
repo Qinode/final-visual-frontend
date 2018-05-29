@@ -68,7 +68,7 @@
                     (response) => {
                         if (response.data.data.length !== 0) {
                             this.lastUpdate = moment.utc().format(this.$datetimeFormat);
-                            let newData = [];
+                            const newData = [];
                             response.data.data.forEach((point) => {
                                 newData.push({
                                     x: point.time,
@@ -82,7 +82,7 @@
                         console.log(response.data);
                     }
                 );
-                setTimeout(this.getData, 2 * 1000);
+                setTimeout(this.getData, this.$pollInterval* 1000);
             },
             updateChart(newData) {
                 this.lineChart.config.data.datasets[0].data.push(...newData);

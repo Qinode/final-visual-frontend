@@ -31,13 +31,8 @@
         },
         mounted() {
             this.updateNow();
-            this.render();
-            // this.$nextTick(() => {
-            //     this.leafMap = this.basicMapLayer;
-            //     this.heatmap = this.heatMapLayer;
-            //     this.leafMap.addLayer(this.heatmap);
-            //     this.renderHeatLayer();
-            // });
+            this.renderMap();
+            this.renderHeatLayer("field1");
         },
         computed: {
             basicMapLayer() {
@@ -74,58 +69,46 @@
                 this.now = moment.utc().format(this.$datetimeFormat);
                 setTimeout(this.updateNow, 1000);
             },
-            render() {
+            renderMap() {
                 this.$http.post("metadata/sensors", { node_table: "node" }).then(
                     (response) => {
                         this.sensors = response.data.data;
                         this.leafMap = this.basicMapLayer;
                         this.heatmap = this.heatMapLayer;
                         this.leafMap.addLayer(this.heatmap);
-                        this.renderHeatLayer();
                     },
                     (response) => {
                         console.log(response.data);
                     }
                 );
             },
-            getSensorsData() {
-                return [
-                    [50.94099679, -0.10949393, Math.floor(Math.random() * 30) + 1],
-                    [50.94131024, -0.10934176, Math.floor(Math.random() * 30) + 1],
-                    [50.94171482, -0.10913786, Math.floor(Math.random() * 30) + 1],
-                    [50.94219203, -0.10916078, Math.floor(Math.random() * 30) + 1],
-                    [50.94236324, -0.10900667, Math.floor(Math.random() * 30) + 1],
-                    [50.9410758, -0.11020363, Math.floor(Math.random() * 10) + 1],
-                    [50.9413209, -0.11009397, Math.floor(Math.random() * 10) + 1],
-                    [50.94182848, -0.10997704, Math.floor(Math.random() * 10) + 1],
-                    [50.94208887, -0.10993387, Math.floor(Math.random() * 10) + 1],
-                    [50.94250863, -0.10991221, Math.floor(Math.random() * 10) + 1],
-                    [50.9424186, -0.10866688, Math.floor(Math.random() * 10) + 1],
-                    [50.94199277, -0.10867638, Math.floor(Math.random() * 20) + 1],
-                    [50.94164463, -0.10886622, Math.floor(Math.random() * 20) + 1],
-                    [50.94126736, -0.10890052, Math.floor(Math.random() * 20) + 1],
-                    [50.94096022, -0.10925082, Math.floor(Math.random() * 20) + 1],
-                    [50.94089209, -0.10990126, Math.floor(Math.random() * 20) + 1],
-                    [50.94133561, -0.10969257, Math.floor(Math.random() * 10) + 1],
-                    [50.94209916, -0.10953461, Math.floor(Math.random() * 10) + 1],
-                    [50.94172002, -0.10957757, Math.floor(Math.random() * 30) + 1],
-                    [50.94244257, -0.10942202, Math.floor(Math.random() * 30) + 1],
-                    [50.94104064, -0.11057843, Math.floor(Math.random() * 30) + 1],
-                    [50.94148519, -0.11033065, Math.floor(Math.random() * 30) + 1],
-                    [50.94177094, -0.11037551, Math.floor(Math.random() * 30) + 1],
-                    [50.94216666, -0.11023289, Math.floor(Math.random() * 30) + 1],
-                    [50.94232998, -0.1103066, Math.floor(Math.random() * 10) + 1],
-                    [50.942387, -0.10990188, Math.floor(Math.random() * 10) + 1]
-                ];
+            renderHeatLayer(fieldName) {
+                const body = { field: fieldName };
+                this.$http.post("data/latest", body).then(
+                    (response) => {
+                        const resData = response.data.data;
+                        const latestData = [];
+                        resData.forEach((point) => {
+                            const latlng = this.getLatlng(point.sensor_id);
+                            latestData.push([latlng[0], latlng[1], point[fieldName]]);
+                        });
+                        this.setHeatLayerValue(latestData);
+                    },
+                    (response) => {
+                        console.log(response);
+                    }
+                );
+                setTimeout(this.renderHeatLayer, this.$pollInterval * 1000, fieldName);
             },
-            renderHeatLayer() {
-                const sensorValues = this.getSensorsData();
-                this.snapshot.push({ timestamp: this.now, value: sensorValues });
-                if (this.snapshot.length > 10) {
+            setHeatLayerValue(latestData) {
+                this.snapshot.push({ timestamp: this.now, value: latestData });
+                while (this.snapshot.length > 10) {
                     this.snapshot.shift();
                 }
-                this.heatmap.setLatLngs(sensorValues);
-                setTimeout(this.renderHeatLayer, 5000);
+                this.heatmap.setLatLngs(latestData);
+            },
+            getLatlng(sensorId) {
+                return this.sensors.find(sensor => sensor.sensor_id === sensorId).latlng;
             },
             setSnapshot(timestamp) {
                 this.heatmap.setLatLngs(
