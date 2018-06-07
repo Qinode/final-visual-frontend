@@ -1,6 +1,19 @@
 <template>
     <div>
         <h3>{{ now }}</h3>
+        <Legend :gradients="{
+            0: '#00E3E5',
+            0.1: '#00E19F',
+            0.2: '#00DD5A',
+            0.3: '#00D917',
+            0.4: '#29D500',
+            0.5: '#67D200',
+            0.6: '#A3CE00',
+            0.7: '#CAB700',
+            0.8: '#C67800',
+            0.9: '#C23B00',
+            1: '#BF0000'
+        }"></Legend>
         <div class="timeline">
             <ol>
                 <li v-for="n in this.snapshot"
@@ -16,9 +29,13 @@
     import L from "leaflet";
     import "@/assets/lib/leaflet/leaflet-idw";
     import moment from "moment";
+    import Legend from "../heatmap/Legend";
 
     export default {
         name: "LeafMap",
+        components: {
+            Legend
+        },
         data() {
             return {
                 leafMap: undefined,
