@@ -1,5 +1,7 @@
 <template>
     <div id="app">
+        <router-link to="/map">heat map</router-link>
+        <router-link to="/correlation">correlation</router-link>
         <router-view></router-view>
     </div>
 </template>
