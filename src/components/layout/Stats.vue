@@ -23,6 +23,7 @@
         },
         props: ["sensorId"],
         created() {
+            console.log("on create");
             this.$http.post("metadata/fields", { sensor_id: this.sensorId }).then(
                 (response) => {
                     this.measurements = response.data.data;

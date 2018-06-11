@@ -1,7 +1,7 @@
 import Vue from "vue";
 import Router from "vue-router";
 import Correlation from "@/components/layout/Correlation";
-import LeafMap from "@/components/visual/LeafMap";
+import MainPage from "@/components/layout/MainPage";
 import Stats from "@/components/layout/Stats";
 
 Vue.use(Router);
@@ -14,8 +14,14 @@ export default new Router({
         },
         {
             path: "/map",
-            name: "LeafMap",
-            component: LeafMap
+            name: "MainPage",
+            component: MainPage,
+            children: [{
+                name: "sensorMeasurement",
+                path: ":sensorId",
+                component: Stats,
+                props: true
+            }]
         },
         {
             path: "/correlation",
