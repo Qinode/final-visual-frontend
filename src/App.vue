@@ -1,14 +1,18 @@
 <template>
     <div id="app">
-        <router-link to="/map">heat map</router-link>
-        <router-link to="/correlation">correlation</router-link>
+        <TopBar></TopBar>
         <router-view></router-view>
     </div>
 </template>
 
 <script>
+    import TopBar from "@/components/layout/TopNavbar";
+
     export default {
-        name: "App"
+        name: "App",
+        components: {
+            TopBar
+        }
     };
 </script>
 

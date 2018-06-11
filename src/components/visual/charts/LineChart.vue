@@ -82,7 +82,7 @@
                         console.log(response.data);
                     }
                 );
-                setTimeout(this.getData, this.$pollInterval* 1000);
+                setTimeout(this.getData, this.$pollInterval * 1000);
             },
             updateChart(newData) {
                 this.lineChart.config.data.datasets[0].data.push(...newData);

@@ -5,21 +5,23 @@
             <div v-for="measurement in sensor.measurements" :key="sensor + '_' + measurement">
                 <input type="checkbox" :id="sensor.sensorId + '_' + measurement" :value="sensor.sensorId + '_' + measurement"
                        v-model="selectedMeasurements"/>
-                <label :for="sensor.sensorId + '_' + measurement">{{ sensor.sensorId + "_" + measurement }}</label>
+                <label :for="sensor.sensorId + '_' + measurement">{{ sensor.sensorId + "-" + measurement }}</label>
             </div>
         </div>
         <span>Checked names: {{ selectedMeasurements }}</span>
         <button @click="createCorrelation()">Create Correlation</button>
         <div id="correlation-container" v-for="corr in corrlations">
-            <p>{{ corr[0].sensorId + " " + corr[0].measurement }}</p>
-            <p>{{ corr[1].sensorId + " " + corr[0].measurement }}</p>
+            <CorrelationScatter :correlation="corr" :plotId="'1'"></CorrelationScatter>
         </div>
     </div>
 </template>
 
 <script>
+    import CorrelationScatter from "@/components/visual/charts/CorrelationScatter";
+
     export default {
         name: "Correlation",
+        components: { CorrelationScatter },
         data() {
             return {
                 sensors: [{
