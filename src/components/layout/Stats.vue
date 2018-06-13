@@ -11,6 +11,7 @@
 </template>
 
 <script>
+    import { fields } from "@/temp/TempSensorsInfo";
     import LineChart from "../visual/charts/LineChart";
 
     export default {
@@ -23,15 +24,7 @@
         },
         props: ["sensorId"],
         created() {
-            console.log("on create");
-            this.$http.post("metadata/fields", { sensor_id: this.sensorId }).then(
-                (response) => {
-                    this.measurements = response.data.data;
-                },
-                (response) => {
-                    console.log(response.data);
-                }
-            );
+            this.measurements = fields;
         }
 
     };

@@ -10,6 +10,7 @@
 </template>
 
 <script>
+    import base64ToReadable from "@/util/Decoder";
     import Chart from "chart.js";
     import moment from "moment";
 
@@ -21,6 +22,7 @@
                 lineChart: undefined,
                 maxLength: 12 * 60,
                 lastUpdate: moment.utc().format(this.$datetimeFormat),
+                pollingTimer: undefined,
                 data: []
             };
         },
@@ -59,21 +61,26 @@
         },
         methods: {
             getData() {
-                const body = {
+                const params = {
                     sensor_id: this.sensorId,
-                    field: this.measurement,
-                    timestamp: this.lastUpdate
+                    start_from: this.lastUpdate,
+                    id_column: "gateway_addr"
                 };
-                this.$http.post("data", body).then(
+                this.$http.get("data/AllApplicationData/payload", {params: params}).then(
                     (response) => {
                         if (response.data.data.length !== 0) {
                             this.lastUpdate = moment.utc().format(this.$datetimeFormat);
                             const newData = [];
                             response.data.data.forEach((point) => {
-                                newData.push({
-                                    x: point.time,
-                                    y: point[this.measurement]
-                                });
+                                try {
+                                    const reading = base64ToReadable(point.paylod, this.measurement);
+                                    newData.push({
+                                        x: point.time,
+                                        y: reading
+                                    });
+                                } catch (e) {
+                                    console.log(`${e}, caused by ${this.sensorId} with payload ${point.payload}`);
+                                }
                             });
                             this.updateChart(newData);
                         }
@@ -82,7 +89,7 @@
                         console.log(response.data);
                     }
                 );
-                setTimeout(this.getData, this.$pollInterval * 1000);
+                this.pollingTimer = setTimeout(this.getData, this.$pollInterval * 1000);
             },
             updateChart(newData) {
                 this.lineChart.config.data.datasets[0].data.push(...newData);
@@ -90,6 +97,9 @@
                     this.lineChart.config.data.datasets[0].data.shift();
                 }
                 this.lineChart.update();
+            },
+            stopPolling() {
+                clearTimeout(this.pollingTimer);
             }
         }
     };

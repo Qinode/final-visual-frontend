@@ -11,17 +11,14 @@
         props: ["gradients"],
         mounted() {
             const width = this.$refs.legend.clientWidth;
-            const height = 30;
-            var w = 300, h = 50;
+            const h = 50;
 
-            var key = d3.select("#legend")
+            const key = d3.select("#legend")
                 .append("svg")
                 .attr("preserveAspectRatio", "xMinYMin meet")
                 .attr("viewBox", `0, 0, ${width}, 50`);
-                // .attr("width", w)
-                // .attr("height", h);
 
-            var legend = key.append("defs")
+            const legend = key.append("defs")
                 .append("svg:linearGradient")
                 .attr("id", "gradient")
                 .attr("x1", "0%")
@@ -30,7 +27,7 @@
                 .attr("y2", "100%")
                 .attr("spreadMethod", "pad");
 
-            for (const stop in this.gradients) {
+            for(const stop in this.gradients) {
                 legend.append("stop").attr("offset", `${stop * 100}%`).attr("stop-color", this.gradients[stop]).attr("stop-opacity", 1);
             }
 
@@ -40,11 +37,11 @@
                 .style("fill", "url(#gradient)")
                 .attr("transform", "translate(0,10)");
 
-            var y = d3.scaleLinear()
+            const y = d3.scaleLinear()
                 .range([width, 0])
-                .domain([68, 12]);
+                .domain([38, 12]);
 
-            var yAxis = d3.axisBottom()
+            const yAxis = d3.axisBottom()
                 .scale(y)
                 .ticks(5);
 

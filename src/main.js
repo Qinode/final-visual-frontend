@@ -10,7 +10,7 @@ Vue.config.productionTip = false;
 
 const rootUrl = "http://146.169.47.32:4000";
 Vue.http.options.root = rootUrl;
-Vue.prototype.$pollInterval = 60;
+Vue.prototype.$pollInterval = 60 * 3;
 Vue.prototype.$datetimeFormat = "YYYY-MM-DD[T]HH:mm:ss[Z]";
 
 /* eslint-disable no-new */

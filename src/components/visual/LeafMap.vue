@@ -27,6 +27,8 @@
 
 <script>
     import L from "leaflet";
+    import { sensorsInfo, sensorIds } from "@/temp/TempSensorsInfo";
+    import base64ToReadable from "@/util/Decoder";
     import "@/assets/lib/leaflet/leaflet-idw";
     import moment from "moment";
     import Legend from "../heatmap/Legend";
@@ -40,16 +42,15 @@
             return {
                 leafMap: undefined,
                 sensors: [],
-                isSensorsLoaded: false,
                 heatmap: undefined,
                 snapshot: [],
-                now: "Welcome to Your Vue.js App"
+                now: ""
             };
         },
         mounted() {
             this.updateNow();
             this.renderMap();
-            this.renderHeatLayer("field1");
+            this.renderHeatLayer("humidity");
         },
         computed: {
             basicMapLayer() {
@@ -67,11 +68,6 @@
                 this.sensors.forEach((sensor) => {
                     L.marker(sensor.latlng, { id: sensor.sensor_id }).addTo(map).on("click", (e) => {
                         this.$emit("openStats", e.sourceTarget.options.id);
-                        // const url = this.$router.resolve({
-                        //     name: "Stats",
-                        //     params: { sensorId: e.sourceTarget.options.id }
-                        // });
-                        // window.open(url.href, "_blank");
                     });
                 });
                 return map;
@@ -88,27 +84,28 @@
                 setTimeout(this.updateNow, 1000);
             },
             renderMap() {
-                this.$http.post("metadata/sensors", { node_table: "node" }).then(
-                    (response) => {
-                        this.sensors = response.data.data;
-                        this.leafMap = this.basicMapLayer;
-                        this.heatmap = this.heatMapLayer;
-                        this.leafMap.addLayer(this.heatmap);
-                    },
-                    (response) => {
-                        console.log(response.data);
-                    }
-                );
+                this.sensors = sensorsInfo;
+                this.leafMap = this.basicMapLayer;
+                this.heatmap = this.heatMapLayer;
+                this.leafMap.addLayer(this.heatmap);
             },
             renderHeatLayer(fieldName) {
-                const body = { field: fieldName };
-                this.$http.post("data/latest", body).then(
+                const params = { group_tag: "gateway_addr" };
+                this.$http.get("data/AllApplicationData/payload/latest", { params: params }).then(
                     (response) => {
                         const resData = response.data.data;
                         const latestData = [];
                         resData.forEach((point) => {
-                            const latlng = this.getLatlng(point.sensor_id);
-                            latestData.push([latlng[0], latlng[1], point[fieldName]]);
+                            if (sensorIds.includes(point.sensor_id)) {
+                                try {
+                                    console.log(point.sensor_id);
+                                    const reading = base64ToReadable(point.payload, fieldName);
+                                    const latlng = this.getLatlng(point.sensor_id);
+                                    latestData.push([latlng[0], latlng[1], reading]);
+                                } catch (e) {
+                                    console.log(`${e}, caused by ${point.sensor_id} with payload ${point.payload}`);
+                                }
+                            }
                         });
                         this.setHeatLayerValue(latestData);
                     },
