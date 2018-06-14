@@ -54,8 +54,13 @@
         },
         computed: {
             basicMapLayer() {
+                const latlngs = [];
+                this.sensors.forEach((sensor) => {
+                    latlngs.push(sensor.latlng);
+                });
+                const bounds = L.latLngBounds(latlngs);
                 const map = L.map("map", {
-                    center: [50.94171482, -0.10913786],
+                    center: bounds.getCenter(),
                     zoom: 18,
                     minZoom: 18,
                     maxZoom: 18,
@@ -67,6 +72,7 @@
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
                     L.marker(sensor.latlng, { id: sensor.sensor_id }).addTo(map).on("click", (e) => {
+                        setTimeout(() => { map.invalidateSize(); }, 400);
                         this.$emit("openStats", e.sourceTarget.options.id);
                     });
                 });
@@ -98,7 +104,6 @@
                         resData.forEach((point) => {
                             if (sensorIds.includes(point.sensor_id)) {
                                 try {
-                                    console.log(point.sensor_id);
                                     const reading = base64ToReadable(point.payload, fieldName);
                                     const latlng = this.getLatlng(point.sensor_id);
                                     latestData.push([latlng[0], latlng[1], reading]);
@@ -115,6 +120,9 @@
                 );
                 setTimeout(this.renderHeatLayer, this.$pollInterval * 1000, fieldName);
             },
+            resizeMap() {
+                this.leafMap.invalidateSize();
+            },
             setHeatLayerValue(latestData) {
                 this.snapshot.push({ timestamp: this.now, value: latestData });
                 while (this.snapshot.length > 10) {
@@ -129,7 +137,7 @@
                 this.heatmap.setLatLngs(
                     this.snapshot.find(item => item.timestamp === timestamp).value
                 );
-            },
+            }
         }
     };
 </script>

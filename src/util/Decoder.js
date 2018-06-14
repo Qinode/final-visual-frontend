@@ -1,11 +1,11 @@
 function base64ToArrayBuffer(base64) {
     const binaryString = window.atob(base64);
     const len = binaryString.length;
-    const bytes = new Uint8Array(len);
+    const bytes = new Uint8Array(len + 1);
     for (let i = 0; i < len; i += 1) {
-        bytes[i] = binaryString.charCodeAt(i);
+        bytes[i + 1] = binaryString.charCodeAt(i);
     }
-    return bytes.buffer;
+    return bytes;
 }
 
 const fieldOffset = {

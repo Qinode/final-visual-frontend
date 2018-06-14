@@ -1,9 +1,9 @@
 <template>
     <div>
-        <LeafMap class="map" id="heatmap" @openStats="openNav"></LeafMap>
-        <div id="mySidenav" class="sidenav">
+        <LeafMap class="map" id="heatmap" ref="heatmap" @openStats="openNav"></LeafMap>
+        <div id="sidePanel" class="sidenav">
             <a href="javascript:void(0)" class="closebtn" @click="closeNav">&times;</a>
-            <router-view></router-view>
+            <router-view :key="$route.path"></router-view>
         </div>
     </div>
 </template>
@@ -34,6 +34,7 @@
                 this.clickedSensorId = undefined;
                 document.getElementById("mySidenav").style.width = "0";
                 document.getElementById("heatmap").style.marginRight = "0";
+                setTimeout(this.$refs.heatmap.resizeMap, 400);
             }
         }
     };
@@ -41,7 +42,7 @@
 
 <style scoped>
     #heatmap {
-        transition: margin-right .5s;
+        transition: margin-right .0s;
         padding: 16px;
     }
     .sidenav .closebtn {
@@ -61,6 +62,6 @@
         background-color: #FFFFFF; /* Black*/
         overflow-x: hidden; /* Disable horizontal scroll */
         padding-top: 60px; /* Place content 60px from the top */
-        transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+        transition: 0.0s; /* 0.5 second transition effect to slide in the sidenav */
     }
 </style>

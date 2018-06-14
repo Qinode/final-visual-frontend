@@ -21,9 +21,8 @@
             return {
                 lineChart: undefined,
                 maxLength: 12 * 60,
-                lastUpdate: moment.utc().format(this.$datetimeFormat),
+                lastUpdate: moment.utc().subtract(2, "days").format(this.$datetimeFormat),
                 pollingTimer: undefined,
-                data: []
             };
         },
         mounted() {
@@ -31,22 +30,28 @@
             const cfg = {
                 type: "line",
                 data: {
-                    // labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
                     datasets: [{
                         label: this.measurement,
                         data: [],
-                        fill: false
+                        fill: false,
+                        pointRadius: 0
                     }]
                 },
                 options: {
                     responsive: true,
                     title: {
                         display: true,
-                        text: this.sensorId + this.measurement
+                        text: `${this.sensorId}  ${this.measurement}`
                     },
                     scales: {
                         xAxes: [{
                             type: "time",
+                            time: {
+                                unit: "hour",
+                                displayFormats: {
+                                    hour: "DD MMM hh:mm"
+                                }
+                            },
                             distribution: "linear",
                             display: true
                         }],
@@ -57,7 +62,9 @@
                 }
             };
             this.lineChart = new Chart(ctx, cfg);
-            this.getData();
+            if (typeof this.sensorId !== "undefined") {
+                this.getData();
+            }
         },
         methods: {
             getData() {
@@ -73,7 +80,7 @@
                             const newData = [];
                             response.data.data.forEach((point) => {
                                 try {
-                                    const reading = base64ToReadable(point.paylod, this.measurement);
+                                    const reading = base64ToReadable(point.payload, this.measurement);
                                     newData.push({
                                         x: point.time,
                                         y: reading
