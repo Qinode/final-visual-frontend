@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>{{ now }}</h3>
-        <Legend :gradients="{
+        <Legend ref="legend" :gradients="{
             0: '#00E3E5',
             0.1: '#00E19F',
             0.2: '#00DD5A',
@@ -72,6 +72,9 @@
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
                     L.marker(sensor.latlng, { id: sensor.sensor_id }).addTo(map).on("click", (e) => {
+                        // const a = Math.random();
+                        // const b = Math.random();
+                        // this.$refs.legend.drawAxis(Math.min(a, b), Math.max(a, b));
                         setTimeout(() => { map.invalidateSize(); }, 400);
                         this.$emit("openStats", e.sourceTarget.options.id);
                     });

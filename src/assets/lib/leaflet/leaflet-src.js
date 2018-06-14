@@ -4225,7 +4225,7 @@ var Map = Evented.extend({
 		// this event. Also fired on mobile when the user holds a single touch
 		// for a second (also called long press).
 		// @event keypress: KeyboardEvent
-		// Fired when the user presses a key from the keyboard while the map is focused.
+		// Fired when the user presses a legendSVG from the keyboard while the map is focused.
 		onOff(this._container, 'click dblclick mousedown mouseup ' +
 			'mouseover mouseout mousemove contextmenu keypress', this._handleDOMEvent, this);
 
@@ -9498,7 +9498,7 @@ var Popup = DivOverlay.extend({
 
 		// @option closeOnEscapeKey: Boolean = true
 		// Set it to `false` if you want to override the default behavior of
-		// the ESC key for closing of the popup.
+		// the ESC legendSVG for closing of the popup.
 		closeOnEscapeKey: true,
 
 		// @option closeOnClick: Boolean = *
@@ -11161,12 +11161,12 @@ var GridLayer = Layer.extend({
 		}
 		return bounds;
 	},
-	// converts tile coordinates to key for the tile cache
+	// converts tile coordinates to legendSVG for the tile cache
 	_tileCoordsToKey: function (coords) {
 		return coords.x + ':' + coords.y + ':' + coords.z;
 	},
 
-	// converts tile cache key to coordinates
+	// converts tile cache legendSVG to coordinates
 	_keyToTileCoords: function (key) {
 		var k = key.split(':'),
 		    coords = new Point(+k[0], +k[1]);
@@ -12771,7 +12771,7 @@ GeoJSON.asFeature = asFeature;
 Map.mergeOptions({
 	// @option boxZoom: Boolean = true
 	// Whether the map can be zoomed to a rectangular area specified by
-	// dragging the mouse while pressing the shift key.
+	// dragging the mouse while pressing the shift legendSVG.
 	boxZoom: true
 });
 
@@ -13198,7 +13198,7 @@ Map.mergeOptions({
 	keyboard: true,
 
 	// @option keyboardPanDelta: Number = 80
-	// Amount of pixels to pan when pressing an arrow key.
+	// Amount of pixels to pan when pressing an arrow legendSVG.
 	keyboardPanDelta: 80
 });
 

@@ -6,7 +6,7 @@
                        :sensor-id="sensorId"
                        :measurement="measurement"></LineChart>
         </div>
-        <!--<p v-for="measurement in measurements" :key="measurement">{{ measurement }}</p>-->
+        <!--<p v-for="measurement in measurements" :legendSVG="measurement">{{ measurement }}</p>-->
     </div>
 </template>
 
