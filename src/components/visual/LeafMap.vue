@@ -72,7 +72,6 @@
                 }).addTo(map);
                 this.sensors.forEach((sensor) => {
                     L.marker(sensor.latlng, { id: sensor.sensor_id }).addTo(map).on("click", (e) => {
-
                         setTimeout(() => { map.invalidateSize(); }, 400);
                         this.$emit("openStats", e.sourceTarget.options.id);
                     });
@@ -80,14 +79,13 @@
                 return map;
             },
             heatMapLayer() {
-                return L.idwLayer([
-                    ],
-                    { opacity: 0.2, cellSize: 5, maxZoom: 18, exp: 2 });
+                return L.idwLayer([],
+                    { opacity: 0.2, cellSize: 5, maxZoom: 18, exp: 2, redrawFinish: this.redrawLegend });
             }
         },
         methods: {
             updateNow() {
-                this.now = moment.utc().format(this.$datetimeFormat);
+                this.now = moment().format(this.$datetimeFormat);
                 setTimeout(this.updateNow, 1000);
             },
             renderMap() {
@@ -114,10 +112,6 @@
                             }
                         });
                         this.setHeatLayerValue(latestData);
-                        // this.$refs.legend.drawAxis(this.heatmap._idw._max, this.heatmap._idw._min);
-                        console.log(this.heatmap._idw);
-                        console.log(this.heatmap._idw._max);
-                        console.log(this.heatmap._idw._min);
                     },
                     (response) => {
                         console.log(response);
@@ -142,6 +136,9 @@
                 this.heatmap.setLatLngs(
                     this.snapshot.find(item => item.timestamp === timestamp).value
                 );
+            },
+            redrawLegend(min, max) {
+                 this.$refs.legend.drawAxis(min, max);
             }
         }
     };

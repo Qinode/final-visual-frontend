@@ -16,9 +16,10 @@
         this._width = canvas.width;
         this._height = canvas.height;
 
-        this._max = 1;
-        this._min = 1;
+        this._max = Number.MIN_SAFE_INTEGER;
+        this._min = Number.MAX_SAFE_INTEGER;
         this._data = [];
+        this._redrawFinish = undefined; // callback
     }
 
     simpleidw.prototype = {
@@ -61,6 +62,11 @@
 
         clear: function () {
             this._data = [];
+            return this;
+        },
+
+        redrawFinish: function(callback) {
+            this._redrawFinish = callback;
             return this;
         },
 
@@ -111,11 +117,11 @@
 
             for (var i = 0, len = this._data.length, p; i < len; i++) {
                 var p = this._data[i];
-                var j = Math.round(((p[2] - this._min) / this._max) * 255) * 4;
+                var j = Math.round(((p[2] - this._min) / (this._max - this._min)) * 255) * 4;
                 ctx.fillStyle = 'rgba('+grad[j]+','+grad[j+1]+','+grad[j+2]+','+opacity+')';
                 ctx.fillRect(p[0] - this._r,p[1] - this._r,this._r,this._r);
             }
-
+            typeof this._redrawFinish === "function" && this._redrawFinish(this._min, this._max);
             return this;
         }
     },
@@ -129,7 +135,7 @@
             maxZoom: 18,
             cellSize: 1,
             exp: 2,
-            max: 100
+            redrawFinish: undefined // callback function
         },
         */
         initialize: function (latlngs, options) {
@@ -195,14 +201,6 @@
             return this;
         },
 
-        getHeatMapMax: function () {
-            return this._idw.getMax();
-        },
-
-        getHeatMapMin: function () {
-            return this._idw.getMin();
-        },
-
         _initCanvas: function () {
             var canvas = this._canvas = L.DomUtil.create('canvas', 'leaflet-idwmap-layer leaflet-layer');
 
@@ -222,6 +220,7 @@
 
         _updateOptions: function () {
             this._idw.cellSize(this.options.cellSize || this._idw.defaultCellSize);
+            this._idw.redrawFinish(this.options.redrawFinish);
 
             if (this.options.gradient) {
                 this._idw.gradient(this.options.gradient);
@@ -248,7 +247,7 @@
         },
 
         _redraw: function () {
-            if(this._latlngs.length === 0) {
+            if(this._latlngs === undefined || this._latlngs.length === 0) {
                 return;
             }
 
@@ -274,7 +273,7 @@
                 panePos = this._map._getMapPanePos(),
                 offsetX = 0, //panePos.x % cellSize,
                 offsetY = 0, // panePos.y % cellSize,
-                i, len, p, cell, x, y, j, len2, k;
+                i, len, p, cell, x, y, j, len2, k, len3;
 
             console.time('process');
 
@@ -302,7 +301,7 @@
 
                     }
 
-                    interpolVal = numerator/denominator;
+                    const interpolVal = numerator/denominator;
 
                     cell = [j*r, i*r, interpolVal];
 
