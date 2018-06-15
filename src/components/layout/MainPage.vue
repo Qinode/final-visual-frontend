@@ -26,13 +26,13 @@
         methods: {
             openNav(message) {
                 this.clickedSensorId = message;
-                document.getElementById("mySidenav").style.width = "50%";
+                document.getElementById("sidePanel").style.width = "50%";
                 document.getElementById("heatmap").style.marginRight = "50%";
                 this.$router.replace({ name: "sensorMeasurement", params: { sensorId: this.clickedSensorId } });
             },
             closeNav() {
                 this.clickedSensorId = undefined;
-                document.getElementById("mySidenav").style.width = "0";
+                document.getElementById("sidePanel").style.width = "0";
                 document.getElementById("heatmap").style.marginRight = "0";
                 setTimeout(this.$refs.heatmap.resizeMap, 400);
             }

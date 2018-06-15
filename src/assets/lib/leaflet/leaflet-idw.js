@@ -17,6 +17,7 @@
         this._height = canvas.height;
 
         this._max = 1;
+        this._min = 1;
         this._data = [];
     }
 
@@ -24,19 +25,6 @@
 
         defaultCellSize: 20,
 
-        // defaultGradient: {
-        //     0: '#000066',
-        //     0.1: 'blue',
-        //     0.2: 'cyan',
-        //     0.3: 'lime',
-        //     0.4: 'yellow',
-        //     0.5: 'orange',
-        //     0.6: 'red',
-        //     0.7: 'Maroon',
-        //     0.8: '#660066',
-        //     0.9: '#990099',
-        //     1: '#ff66ff'
-        // },
         defaultGradient: {
             0: '#00E3E5',
             0.1: '#00E19F',
@@ -58,6 +46,11 @@
 
         max: function (max) {
             this._max = max;
+            return this;
+        },
+
+        min: function (min) {
+            this._min = min;
             return this;
         },
 
@@ -118,7 +111,7 @@
 
             for (var i = 0, len = this._data.length, p; i < len; i++) {
                 var p = this._data[i];
-                var j = Math.round((p[2] / this._max)*255)*4;
+                var j = Math.round(((p[2] - this._min) / this._max) * 255) * 4;
                 ctx.fillStyle = 'rgba('+grad[j]+','+grad[j+1]+','+grad[j+2]+','+opacity+')';
                 ctx.fillRect(p[0] - this._r,p[1] - this._r,this._r,this._r);
             }
@@ -141,8 +134,6 @@
         */
         initialize: function (latlngs, options) {
             this._latlngs = latlngs;
-            console.log(latlngs);
-
             L.setOptions(this, options);
         },
 
@@ -204,6 +195,14 @@
             return this;
         },
 
+        getHeatMapMax: function () {
+            return this._idw.getMax();
+        },
+
+        getHeatMapMin: function () {
+            return this._idw.getMin();
+        },
+
         _initCanvas: function () {
             var canvas = this._canvas = L.DomUtil.create('canvas', 'leaflet-idwmap-layer leaflet-layer');
 
@@ -249,11 +248,13 @@
         },
 
         _redraw: function () {
-            if (!this._map) {
+            if(this._latlngs.length === 0) {
                 return;
             }
 
-            console.log(this._idw._r);
+            if (!this._map) {
+                return;
+            }
 
             var data = [],
                 r = this._idw._r,
@@ -274,9 +275,6 @@
                 offsetX = 0, //panePos.x % cellSize,
                 offsetY = 0, // panePos.y % cellSize,
                 i, len, p, cell, x, y, j, len2, k;
-
-            console.log(nCellX);
-            console.log(nCellY);
 
             console.time('process');
 
@@ -312,13 +310,16 @@
                         data.push([
                             Math.round(cell[0]),
                             Math.round(cell[1]),
-                            Math.min(cell[2], max)
+                            cell[2]
                         ]);
+                        this._idw.min(Math.min(this._idw._min, cell[2]));
+                        this._idw.max(Math.max(this._idw._max, cell[2]));
                     }
                 }
             }
 
             console.timeEnd('process');
+
             console.time('draw ' + data.length);
             this._idw.data(data).draw(this.options.opacity);
             console.timeEnd('draw ' + data.length);
