@@ -1,6 +1,7 @@
 <template>
     <div>
         <h3>{{ now }}</h3>
+        <h2>Temperature</h2>
         <Legend ref="legend" :gradients="{
             0: '#00E3E5',
             0.1: '#00E19F',
@@ -14,13 +15,13 @@
             0.9: '#C23B00',
             1: '#BF0000'
         }"></Legend>
-        <div class="timeline">
-            <ol>
-                <li v-for="n in this.snapshot"
-                    @click="setSnapshot(n.timestamp)">
-                </li>
-            </ol>
-        </div>
+        <!--<div class="timeline">-->
+            <!--<ol>-->
+                <!--<li v-for="n in this.snapshot"-->
+                    <!--@click="setSnapshot(n.timestamp)">-->
+                <!--</li>-->
+            <!--</ol>-->
+        <!--</div>-->
         <div id="map"></div>
     </div>
 </template>
