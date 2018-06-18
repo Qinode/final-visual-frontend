@@ -1,13 +1,21 @@
+import router from "../../router";
+
 const state = {
-    isAuth: false
+    isAuth: false,
+    onFail: false
+};
+
+// getters
+const getters = {
+    isAuth: state => {
+        return state.isAuth;
+    }
 };
 
 // mutations
 const mutations = {
     login(state, payload) {
-        if (payload.password === "psd") {
-            state.isAuth = true;
-        }
+        state.isAuth = true;
     }
 };
 
@@ -15,13 +23,17 @@ const mutations = {
 const actions = {
     login({ commit, state }, payload) {
         if (!state.isAuth) {
-            commit("login", payload);
+            if (payload.password === "psd") {
+                commit("login", payload);
+                router.push("/map");
+            }
         }
     }
 };
 
 export default {
     namespace: true,
+    getters,
     state,
     mutations,
     actions

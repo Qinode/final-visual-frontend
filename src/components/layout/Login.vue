@@ -23,7 +23,6 @@
                         password: this.password
                     };
                     this.$store.dispatch("login", payload);
-                    console.log(this.password);
                 }
             }
         }
