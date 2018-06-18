@@ -3,6 +3,7 @@ import Router from "vue-router";
 import Correlation from "@/components/layout/Correlation";
 import MainPage from "@/components/layout/MainPage";
 import Stats from "@/components/layout/Stats";
+import Login from "@/components/layout/Login";
 
 Vue.use(Router);
 
@@ -10,7 +11,12 @@ export default new Router({
     routes: [
         {
             path: "/",
-            redirect: "/map"
+            redirect: "/login"
+        },
+        {
+            path: "/login",
+            name: "Login",
+            component: Login
         },
         {
             path: "/map",
