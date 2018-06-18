@@ -1,7 +1,7 @@
 <template>
     <div>
         <label for="password">password</label>
-        <input v-model="password" type="password" placeholder="password" id="password" name="password"/>
+        <input v-model="password" @keyup.enter="login" type="password" placeholder="password" id="password" name="password"/>
         <button @click="this.login">Submit</button>
     </div>
 </template>
