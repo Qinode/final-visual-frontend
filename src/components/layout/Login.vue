@@ -19,6 +19,10 @@
                 if (this.password === "" || this.password === undefined){
                     alert("Password Empty");
                 } else {
+                    const payload = {
+                        password: this.password
+                    };
+                    this.$store.dispatch("login", payload);
                     console.log(this.password);
                 }
             }

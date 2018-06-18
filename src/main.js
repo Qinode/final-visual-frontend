@@ -4,6 +4,7 @@ import Vue from "vue";
 import VueResource from "vue-resource";
 import App from "./App";
 import router from "./router";
+import store from "./store";
 
 Vue.use(VueResource);
 Vue.config.productionTip = false;
@@ -17,6 +18,7 @@ Vue.prototype.$datetimeFormat = "YYYY-MM-DD[T]HH:mm:ss[Z]";
 new Vue({
     el: "#app",
     router,
+    store,
     components: { App },
     template: "<App/>"
 });
