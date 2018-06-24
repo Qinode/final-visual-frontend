@@ -1,7 +1,6 @@
 <template>
     <div>
-        <div class="heading">
-            <p>{{ Date.now() }}</p>
+        <div>
             <select v-model="selectedField" id="heatmapField">
                 <option v-for="field in fields" :key="field">{{ field }}</option>
             </select>
@@ -52,15 +51,6 @@
 </script>
 
 <style scoped>
-    .heading {
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-        position: fixed;
-        top: 0;
-        width: 50%;
-    }
-
     #heatmap {
         transition: margin-right .0s;
         padding: 16px;

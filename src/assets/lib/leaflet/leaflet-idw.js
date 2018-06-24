@@ -275,6 +275,8 @@
                 offsetY = 0, // panePos.y % cellSize,
                 i, len, p, cell, x, y, j, len2, k, len3;
 
+            this._idw.min(Number.MAX_SAFE_INTEGER);
+            this._idw.max(Number.MIN_SAFE_INTEGER);
             console.time('process');
 
             for (i = 0, len = nCellY; i < len; i++) {

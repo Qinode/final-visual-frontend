@@ -1,5 +1,6 @@
 <template>
     <div>
+        <h3>{{ now }}</h3>
         <Legend ref="legend" :gradients="{
             0: '#00E3E5',
             0.1: '#00E19F',
@@ -13,13 +14,13 @@
             0.9: '#C23B00',
             1: '#BF0000'
         }"></Legend>
-        <!--<div class="timeline">-->
-            <!--<ol>-->
-                <!--<li v-for="n in this.snapshot"-->
-                    <!--@click="setSnapshot(n.timestamp)">-->
-                <!--</li>-->
-            <!--</ol>-->
-        <!--</div>-->
+        <div class="timeline">
+            <ol>
+                <li v-for="n in this.snapshot"
+                    @click="setSnapshot(n.timestamp)">
+                </li>
+            </ol>
+        </div>
         <div id="map"></div>
     </div>
 </template>
@@ -53,9 +54,11 @@
                 sensors: [],
                 heatmap: undefined,
                 snapshot: [],
+                now: ""
             };
         },
         mounted() {
+            this.updateNow();
             this.renderMap();
             this.renderHeatLayer(this.selectedField);
         },
@@ -91,6 +94,10 @@
             }
         },
         methods: {
+            updateNow() {
+                this.now = moment().format(this.$datetimeFormat);
+                setTimeout(this.updateNow, 1000);
+            },
             renderMap() {
                 this.sensors = sensorsInfo;
                 this.leafMap = this.basicMapLayer;
@@ -98,6 +105,7 @@
                 this.leafMap.addLayer(this.heatmap);
             },
             renderHeatLayer(fieldName) {
+                console.log(`render ${fieldName}`);
                 const params = { group_tag: "gateway_addr" };
                 this.$http.get("data/AllApplicationData/payload/latest", { params: params }).then(
                     (response) => {
@@ -141,7 +149,7 @@
                 );
             },
             redrawLegend(min, max) {
-                 this.$refs.legend.drawAxis(min, max);
+                this.$refs.legend.drawAxis(min, max);
             }
         }
     };
