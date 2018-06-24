@@ -1,27 +1,38 @@
 <template>
     <div>
-        <LeafMap class="map" id="heatmap" ref="heatmap" @openStats="openNav"></LeafMap>
-        <div id="sidePanel" class="sidenav">
-            <a href="javascript:void(0)" class="closebtn" @click="closeNav">&times;</a>
-            <router-view :key="$route.path"></router-view>
+        <div class="heading">
+            <p>{{ Date.now() }}</p>
+            <select v-model="selectedField" id="heatmapField">
+                <option v-for="field in fields" :key="field">{{ field }}</option>
+            </select>
+        </div>
+        <div>
+            <label for="heatmapField"></label>
+            <LeafMap class="map" id="heatmap" ref="heatmap" @openStats="openNav"
+                     :selectedField="selectedField"></LeafMap>
+            <div id="sidePanel" class="sidenav">
+                <a href="javascript:void(0)" class="closebtn" @click="closeNav">&times;</a>
+                <router-view :key="$route.path"></router-view>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
+    import { fields } from "@/temp/TempSensorsInfo";
     import LeafMap from "@/components/visual/LeafMap";
-    import Stats from "@/components/layout/Stats";
 
     export default {
         name: "MainPage",
         data() {
             return {
+                fields,
+                selectedField: fields[0],
                 clickedSensorId: undefined
             };
         },
         components: {
-            LeafMap,
-            Stats
+            LeafMap
         },
         methods: {
             openNav(message) {
@@ -41,6 +52,15 @@
 </script>
 
 <style scoped>
+    .heading {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        position: fixed;
+        top: 0;
+        width: 50%;
+    }
+
     #heatmap {
         transition: margin-right .0s;
         padding: 16px;

@@ -3,6 +3,7 @@ import Router from "vue-router";
 import store from "../store";
 import Correlation from "@/components/layout/Correlation";
 import MainPage from "@/components/layout/MainPage";
+import LeafMap from "@/components/visual/LeafMap";
 import Stats from "@/components/layout/Stats";
 import Login from "@/components/layout/Login";
 

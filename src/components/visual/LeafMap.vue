@@ -1,7 +1,5 @@
 <template>
     <div>
-        <h3>{{ now }}</h3>
-        <h2>Temperature</h2>
         <Legend ref="legend" :gradients="{
             0: '#00E3E5',
             0.1: '#00E19F',
@@ -39,19 +37,27 @@
         components: {
             Legend
         },
+        props: ["selectedField"],
+        watch: {
+            selectedField: function (newValue, oldValue) {
+                if (newValue !== oldValue) {
+                    clearTimeout(this.$options.pollingInterval);
+                    this.snapshot = [];
+                    this.renderHeatLayer(newValue);
+                }
+            }
+        },
         data() {
             return {
                 leafMap: undefined,
                 sensors: [],
                 heatmap: undefined,
                 snapshot: [],
-                now: ""
             };
         },
         mounted() {
-            this.updateNow();
             this.renderMap();
-            this.renderHeatLayer("temperature");
+            this.renderHeatLayer(this.selectedField);
         },
         computed: {
             basicMapLayer() {
@@ -85,10 +91,6 @@
             }
         },
         methods: {
-            updateNow() {
-                this.now = moment().format(this.$datetimeFormat);
-                setTimeout(this.updateNow, 1000);
-            },
             renderMap() {
                 this.sensors = sensorsInfo;
                 this.leafMap = this.basicMapLayer;
@@ -118,7 +120,7 @@
                         console.log(response);
                     }
                 );
-                setTimeout(this.renderHeatLayer, this.$pollInterval * 1000, fieldName);
+                this.$options.pollingInterval = setTimeout(this.renderHeatLayer, this.$pollInterval * 1000, fieldName);
             },
             resizeMap() {
                 this.leafMap.invalidateSize();
