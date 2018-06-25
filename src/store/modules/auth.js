@@ -32,7 +32,7 @@ const mutations = {
 const actions = {
     login({ commit, state }, payload) {
         if (!state.isAuth) {
-            if (payload.password === "ridgeviewAESE") {
+            if (payload.password === "ridgeview2018") {
                 commit("login", payload);
                 router.push("/map");
             } else {

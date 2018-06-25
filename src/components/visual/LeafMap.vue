@@ -105,7 +105,6 @@
                 this.leafMap.addLayer(this.heatmap);
             },
             renderHeatLayer(fieldName) {
-                console.log(`render ${fieldName}`);
                 const params = { group_tag: "gateway_addr" };
                 this.$http.get("data/AllApplicationData/payload/latest", { params: params }).then(
                     (response) => {
